@@ -30,6 +30,9 @@ char	*get_next_line(int fd)
     if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &stack, 0) < 0)
         return (NULL);
     ft_filling(fd, &queue);
+    if (!queue)
+        return (NULL);
+    ft_get_line(&queue);
 
 
 
@@ -62,6 +65,65 @@ void    ft_filling(int fd, t_list **queue)
         ft_strcpyllback(queue, stack, check);
         free(stack);
     }
+}
+void    ft_get_line(t_list **queue)
+{
+    t_list  *last;
+    char    *save;
+    char    *ptr;
+
+    last = ft_lstlast(*queue);
+    while (!(last->next))
+    {
+        if (strchr(last->content, 10) != 0)
+        {
+            ptr = strchr(last->content,10);
+            save = ft_strdup(ptr);
+            ft_putstrll(queue);
+            free(ptr + 2);
+            *(ptr + 1) = '\0';
+            ft_lstclear(&last);
+            return ;
+        }
+        last = last->next;
+    }
+}
+
+void ft_putstrll(t_list **queue)
+{
+    int i;
+    t_list  *last;
+
+    i = 0;
+    last = ft_lstlast(*queue);
+    while (last->content[i] || last->content[i - 1] == '/n')
+    {
+        write(1,&last->content[i],1);
+        i++;
+        if (!(last->content[i]) && last->next)
+        {
+            last = last->next;
+            i = 0;
+        }
+    }
+}
+
+void ft_lstclear(t_list **lst)
+{
+    t_list  *ptr;
+    t_list  *repli;
+
+    if (!lst)
+        return ;
+    ptr = *lst;
+    while (ptr)
+    {
+        repli = ptr->next;
+        free(ptr->content);
+        free(ptr);
+        ptr = repli;
+    }
+    *lst = NULL;
 }
 
 void    ft_strcpyllback(t_list **queue, char *stack, int check)
@@ -131,6 +193,9 @@ char    *ft_strchr(char const *s, int c)
         return ((char *)s + i);
     return (0);
 }
+
+
+
 
 int main(int argc, char **argv)
 {
