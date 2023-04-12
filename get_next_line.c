@@ -22,6 +22,8 @@ typedef struct s_list
         /* Comment passer la ll de fct en fct sans perdre le pointeur a chaque appel de fct ?
         Sachant que le droit qu'as une seul statique pour le bonus*/
 
+    /* tentative avec ll : trop complique pour pas grand chose, idee d'une struct en str +  int pour count le fd*/
+
 char	*get_next_line(int fd)
 {
     static t_list *queue = NULL;
@@ -29,12 +31,6 @@ char	*get_next_line(int fd)
 
     if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &stack, 0) < 0)
         return (NULL);
-    ft_filling(fd, &queue);
-    if (!queue)
-        return (NULL);
-    ft_get_line(&queue);
-
-
 
 
 
@@ -44,7 +40,7 @@ char	*get_next_line(int fd)
 }
 /* Avec ft_filling, j'obtiens du coup, normalement, forcement une ligne complete mais pas encore trimmer du surplus avec la newline
     tout ca stocker dans une linked list qui est lie a la list static dans get next line*/
-void    ft_filling(int fd, t_list **queue)
+/*void    ft_filling(int fd, t_list **queue)
 {
     char *stack;
     int check;
@@ -65,65 +61,6 @@ void    ft_filling(int fd, t_list **queue)
         ft_strcpyllback(queue, stack, check);
         free(stack);
     }
-}
-void    ft_get_line(t_list **queue)
-{
-    t_list  *last;
-    char    *save;
-    char    *ptr;
-
-    last = ft_lstlast(*queue);
-    while (!(last->next))
-    {
-        if (strchr(last->content, 10) != 0)
-        {
-            ptr = strchr(last->content,10);
-            save = ft_strdup(ptr);
-            ft_putstrll(queue);
-            free(ptr + 2);
-            *(ptr + 1) = '\0';
-            ft_lstclear(&last);
-            return ;
-        }
-        last = last->next;
-    }
-}
-
-void ft_putstrll(t_list **queue)
-{
-    int i;
-    t_list  *last;
-
-    i = 0;
-    last = ft_lstlast(*queue);
-    while (last->content[i] || last->content[i - 1] == '/n')
-    {
-        write(1,&last->content[i],1);
-        i++;
-        if (!(last->content[i]) && last->next)
-        {
-            last = last->next;
-            i = 0;
-        }
-    }
-}
-
-void ft_lstclear(t_list **lst)
-{
-    t_list  *ptr;
-    t_list  *repli;
-
-    if (!lst)
-        return ;
-    ptr = *lst;
-    while (ptr)
-    {
-        repli = ptr->next;
-        free(ptr->content);
-        free(ptr);
-        ptr = repli;
-    }
-    *lst = NULL;
 }
 
 void    ft_strcpyllback(t_list **queue, char *stack, int check)
@@ -153,28 +90,7 @@ void    ft_strcpyllback(t_list **queue, char *stack, int check)
     }
     last = ft_lstlast(*queue);
     last->next = new;
-}
-
-t_list *ft_lstlast(t_list *lst)
-{
-    if (!lst)
-        return (NULL);
-    while (lst->next)
-        lst = lst->next;
-    return (lst);
-}
-
-t_list *ft_lstnew(void *content)
-{
-    t_list *list;
-
-    list = malloc(sizeof(t_list));
-    if (!list)
-        return (NULL);
-    list->content = content;
-    list->next = NULL;
-    return (list);
-}
+}*/
 
 char    *ft_strchr(char const *s, int c)
 {
