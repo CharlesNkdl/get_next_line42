@@ -15,5 +15,9 @@ size_t	ft_strlcat(char *dst, char const *src, size_t size);
 char	*ft_strdup(const char *s);
 char *ft_strjoin(char const *s1, char const *s2);
 size_t ft_strlen(char const *s, int version);
+void	ft_free(char *keeper, char *buffer);
+char *ft_analyze(char *keeper, char *buffer);
+char	*get_next_line(int fd);
+
 
 #endif

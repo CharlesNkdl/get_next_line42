@@ -1,20 +1,21 @@
 #include "get_next_line.h"
 
-char *ft_strjoin(char const *s1, char const *s2)
+char *ft_strjoin(char *s1, char *s2)
 {
     size_t  lentotal;
     char    *join;
 
     if (!s1)
-        return (ft_strdup(s2));
+        s1 = ft_strdup("");
     if (!s2)
-        return (ft_strdup(s1));
+        return (NULL);
     lentotal = ft_strlen(s1, 1) + ft_strlen(s2, 1);
     join = (char *)malloc(lentotal + 1);
     if (!join)
         return (NULL);
     ft_strlcpy(join, s1, ft_strlen(s1, 1) + 1);
-    ft_strlcat(join, s2, lentotal + 1);
+    ft_strlcpy(&join[ft_strlen(s1, 1)], s2, (ft_strlen(s2, 1) + 1));
+	free(s1);
     return (join);
 }
 
@@ -31,33 +32,6 @@ char	*ft_strdup(const char *s)
 		dup[i] = s[i];
 	dup[i] = s[i];
 	return (dup);
-}
-
-size_t	ft_strlcat(char *dst, char const *src, size_t size)
-{
-	size_t	i;
-	size_t	j;
-	size_t	r;
-
-	i = 0;
-	while (dst[i] != '\0')
-		++i;
-	r = 0;
-	while (src[r] != '\0')
-		++r;
-	if (size <= i)
-		r = r + size;
-	else
-		r = r + i;
-	j = 0;
-	while (src[j] != '\0' && i + 1 < size)
-	{
-		dst[i] = src[j];
-		i++;
-		j++;
-	}
-	dst[i] = '\0';
-	return (r);
 }
 
 size_t	ft_strlcpy(char *dst, char const *src, size_t size)
@@ -81,21 +55,21 @@ size_t	ft_strlcpy(char *dst, char const *src, size_t size)
 	return (len);
 }
 
-char    *ft_strrchr(char const *s, int c)
+char    *ft_strchr(char const *s, int c)
 {
     char    find;
     int         i;
 
     find = (unsigned char)c;
-    i = ft_strlen(s, 1);
-    while(i > 0)
+    i = 0;
+    while(s[i])
     {
         if (s[i] == find)
-            return (((char *)s) + i);
-        i--;
+            return ((char *)s + i);
+        i++;
     }
     if (s[i] == find)
-        return ((char*)s);
+        return ((char *)s + i);
     return (0);
 }
 
@@ -142,4 +116,5 @@ size_t ft_strlen(char const *s, int version)
 			i++;
 		return (i);
 	}
+	return (i);
 }
