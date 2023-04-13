@@ -1,9 +1,9 @@
 #include "get_next_line.h"
 
-char *ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
-    size_t  lentotal;
-    char    *join;
+    size_t	lentotal;
+    char	*join;
 
     if (!s1)
         s1 = ft_strdup("");
@@ -13,10 +13,10 @@ char *ft_strjoin(char *s1, char *s2)
     join = (char *)malloc(lentotal + 1);
     if (!join)
         return (NULL);
-    ft_strlcpy(join, s1, ft_strlen(s1, 1) + 1);
-    ft_strlcpy(&join[ft_strlen(s1, 1)], s2, (ft_strlen(s2, 1) + 1));
+	ft_strlcpy(join, s1, ft_strlen(s1, 1) + 1);
+	ft_strlcpy(&join[ft_strlen(s1, 1)], s2, (ft_strlen(s2, 1) + 1));
 	free(s1);
-    return (join);
+	return (join);
 }
 
 char	*ft_strdup(const char *s)
@@ -73,32 +73,6 @@ char    *ft_strchr(char const *s, int c)
     return (0);
 }
 
-char *ft_substr(char *s, unsigned int start, size_t len)
-{
-    size_t i;
-    char *str;
-
-    i = 0;
-	if ((unsigned int)ft_strlen(s, 1) < start || !len || !s)
-		return (ft_strdup(""));
-    while (s[start + i] && i < len)
-        i++;
-    str = (char *)malloc(i + 1);
-    if (!str)
-        return (NULL);
-    i = 0;
-    while (s[start] && i < len)
-    {
-        str[i] = s[start];
-		s[start] = '0';
-        i++;
-        start++;
-    }
-	s[start - 1] = '\n';
-    str[i] = 0;
-    return (str);
-}
-
 size_t ft_strlen(char const *s, int version)
 {
     size_t i;
@@ -112,7 +86,7 @@ size_t ft_strlen(char const *s, int version)
 	}
 	if (version == 2)
 	{
-		while (s[i] != '\n')
+		while (s[i] != '\n' && s[i])
 			i++;
 		return (i);
 	}

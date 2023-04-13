@@ -20,53 +20,83 @@
 
 char	*get_next_line(int fd)
 {
-	static char *keeper;
+	static char *keeper[512];
 	char *line;
-	char *buffer;
-	int	reader;
 
 	if (fd == 0 || BUFFER_SIZE <= 0)
 		return (NULL);
+	keeper[fd] = ft_extractfile(fd, keeper[fd]);
+	if (!keeper[fd])
+		return (NULL);
+	line = ft_extractline(keeper[fd]);
+	keeper[fd] = ft_delete(keeper[fd]);
+	return (line);
+}
+
+char *ft_extractfile(int fd, char *keeper)
+{
+	char *buffer;
+	int	reader;
+
 	reader = 1;
-	while (reader > 0)
+	buffer = (char*)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
+	while (reader != 0 && ft_strchr(keeper, 10))
 	{
-		buffer = (char*)malloc(sizeof(char) * BUFFER_SIZE + 1);
-		if (!buffer)
-			return (NULL);
 		reader = read(fd, buffer, BUFFER_SIZE);
 		if (reader < 0)
 		{
-			ft_free(keeper, buffer);
+			free(buffer);
 			return (NULL);
 		}
-		if (!(ft_analyze(keeper, buffer)))
-			line = ft_analyze(keeper, buffer);
-		free(buffer);
+		buffer[reader] = '\0';
+		keeper = ft_strjoin(keeper, buffer);
+	}
+	free(buffer);
+	return (keeper);
+}
+
+char	*ft_extractline(char *keeper)
+{
+	size_t	i;
+	char	*line;
+
+	i = ft_strlen(keeper, 2);
+	line = (char *)malloc(i + 2);
+	if (!line)
+		return (NULL);
+	ft_strlcpy(line, keeper, i + 1);
+	if (keeper[i + 1] == 10)
+	{
+		line[i + 1] = keeper[i + 1];
+		line[i + 2] = '\0';
 	}
 	return (line);
 }
 
-char *ft_analyze(char *keeper, char *buffer)
+char *ft_delete(char *keeper)
 {
-	int check;
+	size_t	i;
+	size_t	j;
+	char *rempl;
 
-	check = 0;
-	keeper = ft_strjoin(keeper,buffer);
-	if (ft_strrchr(keeper, 10) != 0)
-		check++;
-	else
-		return (keeper);
-	if (ft_strrchr((ft_strrchr(keeper,10) - 1),10) != 0)
-		return (ft_substr((ft_strrchr((ft_strrchr(keeper,10) - 1),10)), 0, 1 + ft_strlen((ft_strrchr((ft_strrchr(keeper,10) - 1),10)), 2)));
-	else if ((ft_strrchr((ft_strrchr(keeper,10) - 1),10) == 0) && check == 1)
-		return (ft_substr(keeper, 0, ft_strlen(keeper, 2) + 1));
-	else
+	i = ft_strlen(keeper, 2);
+	if (!keeper[i])
+	{
+		free (keeper);
 		return (NULL);
-}
-
-void	ft_free(char *keeper, char *buffer)
-{
+	}
+	rempl = (char *)malloc(ft_strlen(keeper, 1) - ft_strlen(keeper, 2) + 1);
+	if (!rempl)
+		return (NULL);
+	j = 0;
+	while (keeper[++i])
+	{
+		rempl[j] = keeper[i];
+		j++;
+	}
+	rempl[j] = '\0';
 	free(keeper);
-	free(buffer);
-	return ;
+	return (rempl);
 }
