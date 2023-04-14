@@ -20,10 +20,10 @@
 
 char	*get_next_line(int fd)
 {
-	static char *keeper[512];
-	char *line;
+	static char	*keeper[2048];
+	char	*line;
 
-	if (fd == 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	keeper[fd] = ft_extractfile(fd, keeper[fd]);
 	if (!keeper[fd])
@@ -42,10 +42,10 @@ char *ft_extractfile(int fd, char *keeper)
 	buffer = (char*)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
-	while (reader != 0 && ft_strchr(keeper, 10))
+	while (reader != 0 && !ft_strchr(keeper, 10))
 	{
 		reader = read(fd, buffer, BUFFER_SIZE);
-		if (reader < 0)
+		if (reader == -1)
 		{
 			free(buffer);
 			return (NULL);
@@ -62,16 +62,16 @@ char	*ft_extractline(char *keeper)
 	size_t	i;
 	char	*line;
 
+	if (!keeper[0])
+		return (NULL);
 	i = ft_strlen(keeper, 2);
 	line = (char *)malloc(i + 2);
 	if (!line)
 		return (NULL);
 	ft_strlcpy(line, keeper, i + 1);
-	if (keeper[i + 1] == 10)
-	{
-		line[i + 1] = keeper[i + 1];
-		line[i + 2] = '\0';
-	}
+	if (keeper[i] == 10)
+		line[i] = keeper[i];
+	line[i + 1] = '\0';
 	return (line);
 }
 
@@ -79,20 +79,21 @@ char *ft_delete(char *keeper)
 {
 	size_t	i;
 	size_t	j;
-	char *rempl;
+	char	*rempl;
 
-	i = ft_strlen(keeper, 2);
-	if (!keeper[i])
+	if (ft_strlen(keeper, 1) == (ft_strlen(keeper, 2)))
 	{
-		free (keeper);
+		free(keeper);
 		return (NULL);
 	}
-	rempl = (char *)malloc(ft_strlen(keeper, 1) - ft_strlen(keeper, 2) + 1);
+	i = ft_strlen(keeper, 2) + 1;
+	rempl = (char *)malloc(sizeof(char) * (ft_strlen(&keeper[i], 2)+ 1));
 	if (!rempl)
 		return (NULL);
 	j = 0;
-	while (keeper[++i])
+	while (keeper[i])
 	{
+		i++;
 		rempl[j] = keeper[i];
 		j++;
 	}

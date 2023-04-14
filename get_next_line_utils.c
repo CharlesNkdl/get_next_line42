@@ -6,13 +6,18 @@ char	*ft_strjoin(char *s1, char *s2)
     char	*join;
 
     if (!s1)
-        s1 = ft_strdup("");
+	{
+        s1 = (char *)malloc(1);
+		if (!s1)
+			return (NULL);
+		s1[0] = '\0';
+	}
     if (!s2)
         return (NULL);
     lentotal = ft_strlen(s1, 1) + ft_strlen(s2, 1);
     join = (char *)malloc(lentotal + 1);
     if (!join)
-        return (NULL);
+		return (NULL);
 	ft_strlcpy(join, s1, ft_strlen(s1, 1) + 1);
 	ft_strlcpy(&join[ft_strlen(s1, 1)], s2, (ft_strlen(s2, 1) + 1));
 	free(s1);
@@ -25,7 +30,7 @@ char	*ft_strdup(const char *s)
 	char	*dup;
 
 	i = -1;
-	dup = (char *) malloc(ft_strlen(s, 1) + 1);
+	dup = (char *)malloc(ft_strlen(s, 1) + 1);
 	if (dup == NULL)
 		return (NULL);
 	while (s[++i])
@@ -40,18 +45,15 @@ size_t	ft_strlcpy(char *dst, char const *src, size_t size)
 	size_t	len;
 
 	len = ft_strlen(src, 1);
-	count = 1;
-	if (size >= 1)
+	count = 0;
+	if (!size)
+		return (len);
+	while (src[count] && count < (size - 1))
 	{
-		while ((count < size) && (*src != '\0'))
-		{
-			*dst = *src;
-			src += 1;
-			dst += 1;
-			count++;
-		}
-		*dst = '\0';
+		dst[count] = src[count];
+		count++;
 	}
+	dst[count] = '\0';
 	return (len);
 }
 
@@ -62,6 +64,8 @@ char    *ft_strchr(char const *s, int c)
 
     find = (unsigned char)c;
     i = 0;
+	if (!s)
+		return (NULL);
     while(s[i])
     {
         if (s[i] == find)
@@ -70,7 +74,7 @@ char    *ft_strchr(char const *s, int c)
     }
     if (s[i] == find)
         return ((char *)s + i);
-    return (0);
+    return (NULL);
 }
 
 size_t ft_strlen(char const *s, int version)
@@ -84,7 +88,7 @@ size_t ft_strlen(char const *s, int version)
         	i++;
     	return (i);
 	}
-	if (version == 2)
+	else if (version == 2)
 	{
 		while (s[i] != '\n' && s[i])
 			i++;
