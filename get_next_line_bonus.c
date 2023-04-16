@@ -37,14 +37,12 @@ char *ft_extractfile(int fd, char *keeper)
 {
 	char *buffer;
 	int	reader;
-	int	count;
 
 	reader = 1;
-	count = 0;
 	buffer = (char*)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
-	while (reader != 0 && !ft_strrchr(&(keeper[count]), 10, &count))
+	while (reader != 0 && !ft_strrchr(keeper, 10))
 	{
 		reader = read(fd, buffer, BUFFER_SIZE);
 		if (reader == -1)

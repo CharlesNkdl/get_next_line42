@@ -17,6 +17,6 @@ char	*ft_extractfile(int fd, char *keeper);
 char	*ft_extractline(char *keeper);
 char	*ft_delete(char *keeper);
 char	*ft_strjoin(char *s1, char *s2);
-char    *ft_strrchr(char const *s, int c, int *count);
+char    *ft_strrchr(char const *s, int c);
 
 #endif

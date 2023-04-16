@@ -1,4 +1,4 @@
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_strjoin(char *s1, char *s2)
 {
@@ -24,7 +24,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (join);
 }
 
-char    *ft_strrchr(char const *s, int c,int *count)
+char    *ft_strrchr(char const *s, int c)
 {
     char    find;
     size_t         i;
@@ -40,10 +40,7 @@ char    *ft_strrchr(char const *s, int c,int *count)
         i--;
     }
     if (s[i] == find)
-	{
         return ((char*)s);
-	}
-	*count += i;
     return (0);
 }
 
