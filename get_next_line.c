@@ -87,7 +87,7 @@ char *ft_delete(char *keeper)
 		return (NULL);
 	}
 	i = ft_strlen(keeper, 2) + 1;
-	rempl = (char *)malloc(sizeof(char) * (ft_strlen(&keeper[i], 2)+ 1));
+	rempl = (char *)malloc(sizeof(char) * (ft_strlen(&keeper[i], 1)+ 1));
 	if (!rempl)
 		return (NULL);
 	j = 0;
