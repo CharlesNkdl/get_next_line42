@@ -1,22 +1,19 @@
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-    /* Prendre retour a la ligne
-    le read garde pointeur meme endroit
-    stocker qq part a chaque lecture
-    renvoie qd newline AVEC la newline
-    du coup => le stock doit etre static
-    puis nettoyer par la suite*/
-    /*read int fd void buf size t count , le fd qu'on envoit est le file pointer, deja open*/
-    /* gerer flag -D = OK*/
-    /* hypothese : Il faut supprimer une fois un renvoi de ligne trouver et stocker chaque buffer
-        idee :  * 2D array de string
-                * longue string avec marqueur tampon a chaque fin de buffer
-                * linked list ? => necessite de clear a chaque fois, relou vu que une seul direction, p -e cool avec double
-                * enfaite linked list mais en mode queue , parce que dans tout les cas on sait qu'il n'y a plus rien d'important*/
-        /* Comment passer la ll de fct en fct sans perdre le pointeur a chaque appel de fct ?
-        Sachant que le droit qu'as une seul statique pour le bonus*/
-
-    /* tentative avec ll : trop complique pour pas grand chose, idee d'une struct en str +  int pour count le fd*/
+	/* Take the new line
+	the read command keep the reader in the same spot so i can't backtrack
+	we need to stock it in the static
+	then we need to clean the static keeper otherwise it'll take too much space
+	We need to handle -D flag
+	Hypothesis : - stock a buffer
+				- analyse it for a newline
+				- extract the newline
+				- clean the keeper for future iteration
+		How : - 2D array of string
+			- long string
+			- linked list ? => tested but too complicated for me actually
+			- linked list in queue ? same
+		What i did : Long string + 2D array for multiple fd entries*/
 
 char	*get_next_line(int fd)
 {
@@ -32,17 +29,21 @@ char	*get_next_line(int fd)
 	keeper[fd] = ft_delete(keeper[fd]);
 	return (line);
 }
+/* It'll read the file, stock it in a buffer, put it in the keeper (static) while the reader doesnt return an error or EOF
+	the while loop stop when a newline is encountered in the keeper */
 
 char *ft_extractfile(int fd, char *keeper)
 {
 	char *buffer;
 	int	reader;
+	int	count;
 
 	reader = 1;
+	count = 0;
 	buffer = (char*)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
-	while (reader != 0 && !ft_strrchr(keeper, 10))
+	while (reader != 0 && !ft_strrchr(&(keeper[count]), 10, &count))
 	{
 		reader = read(fd, buffer, BUFFER_SIZE);
 		if (reader == -1)
@@ -56,7 +57,8 @@ char *ft_extractfile(int fd, char *keeper)
 	free(buffer);
 	return (keeper);
 }
-
+/* we know there is a newline in the keeper
+we find the location of the next newline, we malloc a new variable then we copy it*/
 char	*ft_extractline(char *keeper)
 {
 	size_t	i;
@@ -68,25 +70,29 @@ char	*ft_extractline(char *keeper)
 	line = (char *)malloc(i + 2);
 	if (!line)
 		return (NULL);
-	ft_strlcpy(line, keeper, (ft_strlen(keeper, 2) + 2));
+	ft_strlcpy(line, keeper, (i + 2));
 	return (line);
 }
+/* we take the index + 1 of the newline's location then we copy the rest in a new string
+then we send it back into the 2D static array*/
 
 char *ft_delete(char *keeper)
 {
 	size_t	i;
+	size_t	lentot;
 	char	*rempl;
 
 	i = ft_strlen(keeper, 2);
+	lentot = ft_strlen(keeper, 1);
 	if (!keeper[i])
 	{
 		free(keeper);
 		return (NULL);
 	}
-	rempl = (char *)malloc(sizeof(char) * (ft_strlen(keeper, 1) - i + 1));
+	rempl = (char *)malloc(sizeof(char) * (lentot - i + 1));
 	if (!rempl)
 		return (NULL);
-	ft_strlcpy(rempl, &(keeper[i + 1]), (ft_strlen(keeper, 1) - i + 1));
+	ft_strlcpy(rempl, &(keeper[i + 1]), (lentot - i + 1));
 	free(keeper);
 	return (rempl);
 }

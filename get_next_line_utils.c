@@ -2,7 +2,8 @@
 
 char	*ft_strjoin(char *s1, char *s2)
 {
-    size_t	lentotal;
+    size_t	lenone;
+	size_t	lentwo;
     char	*join;
 
     if (!s1)
@@ -13,13 +14,14 @@ char	*ft_strjoin(char *s1, char *s2)
 		s1[0] = '\0';
 	}
     if (!s2)
-        return (NULL);
-    lentotal = ft_strlen(s1, 1) + ft_strlen(s2, 1);
-    join = (char *)malloc(lentotal + 1);
+		return (NULL);
+	lenone = ft_strlen(s1, 1);
+	lentwo = ft_strlen(s2, 1);
+    join = (char *)malloc(lenone + lentwo + 1);
     if (!join)
 		return (NULL);
-	ft_strlcpy(join, s1, ft_strlen(s1, 1) + 1);
-	ft_strlcpy(&join[ft_strlen(s1, 1)], s2, (ft_strlen(s2, 1) + 1));
+	ft_strlcpy(join, s1, lenone + 1);
+	ft_strlcpy(&join[lenone], s2, (lentwo + 1));
 	free(s1);
 	return (join);
 }
