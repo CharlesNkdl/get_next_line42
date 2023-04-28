@@ -1,4 +1,4 @@
-# get_next_line
+# get_next_line ![Grade](https://img.shields.io/badge/Grade-125/100-brightgreen)
 
 This is the `get_next_line` project from 42 School, which provides a function for reading a line from a file descriptor.
 
