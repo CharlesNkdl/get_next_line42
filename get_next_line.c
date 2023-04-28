@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cnikdel <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/24 18:06:06 by cnikdel           #+#    #+#             */
+/*   Updated: 2023/04/24 18:06:09 by cnikdel          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
-	/* Take the new line
+/* Take the new line
 	the read command keep the reader in the same spot so i can't backtrack
 	we need to stock it in the static
 	then we need to clean the static keeper otherwise it'll take too much space
@@ -18,7 +30,7 @@
 char	*get_next_line(int fd)
 {
 	static char	*keeper[2048];
-	char	*line;
+	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -27,21 +39,21 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = ft_extractline(keeper[fd]);
 	keeper[fd] = ft_delete(keeper[fd]);
-
 	return (line);
 }
-/* It'll read the file, stock it in a buffer, put it in the keeper (static) while the reader doesnt return an error or EOF
+/* It'll read the file, stock it in a buffer,
+	put it in the keeper (static) while the reader doesnt return an error or EOF
 	the while loop stop when a newline is encountered in the keeper */
 
-char *ft_extractfile(int fd, char *keeper)
+char	*ft_extractfile(int fd, char *keeper)
 {
-	char *buffer;
-	int	reader;
-	int	count;
+	char	*buffer;
+	int		reader;
+	int		count;
 
 	reader = 1;
 	count = 0;
-	buffer = (char*)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
 	while (reader != 0 && !ft_strrchr(&(keeper[count]), 10, &count))
@@ -50,6 +62,7 @@ char *ft_extractfile(int fd, char *keeper)
 		if (reader == -1)
 		{
 			free(buffer);
+			free(keeper);
 			return (NULL);
 		}
 		buffer[reader] = '\0';
@@ -59,7 +72,9 @@ char *ft_extractfile(int fd, char *keeper)
 	return (keeper);
 }
 /* we know there is a newline in the keeper
-we find the location of the next newline, we malloc a new variable then we copy it*/
+we find the location of the next newline,
+	we malloc a new variable then we copy it*/
+
 char	*ft_extractline(char *keeper)
 {
 	size_t	i;
@@ -75,10 +90,11 @@ char	*ft_extractline(char *keeper)
 	return (line);
 }
 
-/* we take the index + 1 of the newline's location then we copy the rest in a new string
+/* we take the index
+	+ 1 of the newline's location then we copy the rest in a new string
 then we send it back into the 2D static array*/
 
-char *ft_delete(char *keeper)
+char	*ft_delete(char *keeper)
 {
 	size_t	i;
 	size_t	lentot;
